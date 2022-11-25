@@ -7,6 +7,7 @@ from playhouse.shortcuts import model_to_dict
 
 user = Blueprint('users', 'user')
 
+
 @user.route('/register', methods=["POST"])
 def register():
     payload = request.get_json()
@@ -44,6 +45,7 @@ def login():
             return jsonify(data={}, status={"code": 401, "message": "Username or Password is incorrect"})
     except models.DoesNotExist:
         return jsonify(data={}, status={"code": 401, "message": "Username or Password is incorrect"})
+
 
 @user.route('/logout', methods=["GET"])
 @login_required

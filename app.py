@@ -32,7 +32,6 @@ def load_user(user_id):
     except models.DoesNotExist:
         return None
 
-
 @app.before_request
 def before_request():
     """Connect to the database before each request"""
@@ -60,8 +59,6 @@ app.register_blueprint(articles, url_prefix='/api/v1/articles')
 CORS(tips, origins=['http://localhost:3000'], supports_credentials=True)
 app.register_blueprint(tips, url_prefix='/api/v1/tips')
 
-
 if __name__ == '__main__':
     models.initialize()
     app.run(debug=DEBUG, port=PORT)
-

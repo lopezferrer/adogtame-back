@@ -5,6 +5,7 @@ from flask_login import login_required, current_user
 
 tips = Blueprint('tips', 'tips')
 
+
 @tips.route('/', methods=["GET"])
 def get_all_tips():
     try:
@@ -13,6 +14,7 @@ def get_all_tips():
         return jsonify(data=tips, status={"code": 200, "message": "Success"})
     except models.DoesNotExist:
         return jsonify(data={}, status={"code": 401, "message": "Error getting the resources"})
+
 
 @tips.route('/mytips', methods=["GET"])
 @login_required
@@ -24,12 +26,13 @@ def tips_index():
         'status': 200
     }), 200
 
+
 @tips.route('/', methods=['POST'])
-#@login_required
+@login_required
 def create_tip():
     #print(current_user.username)
     payload = request.get_json()
-    new_tip = models.Tip.create(tip=payload['tip'])
+    new_tip = models.Tip.create(tip=payload['tip'], author=current_user.username)
     tip_dict = model_to_dict(new_tip)
 
     return jsonify(
@@ -50,6 +53,7 @@ def get_one_tip(id):
         message="Success"
     ), 200
 
+
 @tips.route('/<id>', methods=["PUT"])
 @login_required
 def update_tip(id):
@@ -62,7 +66,9 @@ def update_tip(id):
         message= 'resource updated successfully'
     ), 200
 
+
 @tips.route('/<id>', methods=["DELETE"])
+@login_required
 def delete_tip(id):
     query = models.Tip.delete().where(models.Tip.id==id)
     query.execute()

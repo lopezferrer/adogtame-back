@@ -1,8 +1,9 @@
 import datetime
 from peewee import *
-from flask_login import UserMixin
+from flask_login import UserMixin, current_user
 
 DATABASE = SqliteDatabase('adogtame.sqlite')
+
 
 class User(UserMixin, Model):
     username = CharField(unique=True)
@@ -19,7 +20,9 @@ class Dog(Model):
     breed = CharField()
     personality = CharField()
     city = CharField()
+    contact_number = CharField(max_length=11)
     vaccines = BooleanField(default=False)
+    created_by = CharField()
     created_at = DateTimeField(default=datetime.datetime.now)
 
     class Meta:
@@ -27,10 +30,11 @@ class Dog(Model):
 
 
 class Article(Model):
-    title = CharField(max_length=200)
+    title = CharField()
     summary = TextField()
     body = TextField()
     image = CharField()
+    author = CharField(null=True)
     created_at = DateTimeField(default=datetime.datetime.now)
     
     class Meta:
@@ -41,8 +45,9 @@ class Veterinarian(Model):
     name = CharField()
     address = CharField()
     city = CharField()
-    phone = CharField()
+    phone = CharField(max_length=11)
     email = CharField()
+    created_by = CharField()
     created_at = DateTimeField(default=datetime.datetime.now)
     
     class Meta:
@@ -50,7 +55,8 @@ class Veterinarian(Model):
 
 
 class Tip(Model):
-    tip = CharField(max_length=200)
+    tip = CharField(max_length=280)
+    author = CharField()
     created_at = DateTimeField(default=datetime.datetime.now)
     
     class Meta:

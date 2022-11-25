@@ -5,6 +5,7 @@ from flask_login import login_required, current_user
 
 veterinarians = Blueprint('veterinarians', 'veterinarians')
 
+
 @veterinarians.route('/', methods=["GET"])
 def get_all_veterinarians():
     try:
@@ -20,7 +21,7 @@ def get_all_veterinarians():
 def create_veterinarian():
     print(current_user.username)
     payload = request.get_json()
-    new_veterinarian = models.Veterinarian.create(name=payload['name'], address=payload['address'], city=payload['city'], phone=payload['phone'], email=payload['email'])
+    new_veterinarian = models.Veterinarian.create(name=payload['name'], address=payload['address'], city=payload['city'], phone=payload['phone'], email=payload['email'], created_by=current_user.username)
     veterinarian_dict = model_to_dict(new_veterinarian)
 
     return jsonify(
@@ -41,6 +42,7 @@ def get_one_veterinarian(id):
         message="Success"
     ), 200
 
+
 @veterinarians.route('/<id>', methods=["PUT"])
 @login_required
 def update_veterinarian(id):
@@ -53,7 +55,9 @@ def update_veterinarian(id):
         message= 'resource updated successfully'
     ), 200
 
+
 @veterinarians.route('/<id>', methods=["DELETE"])
+@login_required
 def delete_veterinarian(id):
     query = models.Veterinarian.delete().where(models.Veterinarian.id==id)
     query.execute()

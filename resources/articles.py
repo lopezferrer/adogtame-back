@@ -5,10 +5,11 @@ from flask_login import login_required, current_user
 
 articles = Blueprint('articles', 'articles')
 
+
 @articles.route('/', methods=["GET"])
 def get_all_articles():
     try:
-        articles = [model_to_dict(article) for article in models.article.select()]
+        articles = [model_to_dict(article) for article in models.Article.select()]
         print(articles)
         return jsonify(data=articles, status={"code": 200, "message": "Success"})
     except models.DoesNotExist:
@@ -18,9 +19,9 @@ def get_all_articles():
 @articles.route('/', methods=['POST'])
 @login_required
 def create_article():
-    #print(current_user.username)
+    print(current_user.username)
     payload = request.get_json()
-    new_article = models.Article.create(title=payload['title'], summary=payload['summary'], body=payload['body'], image=payload['image'])
+    new_article = models.Article.create(title=payload['title'], summary=payload['summary'], body=payload['body'], image=payload['image'], author=current_user.username)
     article_dict = model_to_dict(new_article)
 
     return jsonify(
@@ -41,6 +42,7 @@ def get_one_article(id):
         message="Success"
     ), 200
 
+
 @articles.route('/<id>', methods=["PUT"])
 @login_required
 def update_article(id):
@@ -52,6 +54,7 @@ def update_article(id):
         status=200,
         message= 'resource updated successfully'
     ), 200
+
 
 @articles.route('/<id>', methods=["DELETE"])
 @login_required
