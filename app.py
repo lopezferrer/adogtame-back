@@ -52,9 +52,6 @@ app.register_blueprint(articles, url_prefix='/api/v1/articles')
 CORS(tips, origins=['http://localhost:3000'], supports_credentials=True)
 app.register_blueprint(tips, url_prefix='/api/v1/tips')
 
-@app.route("/")
-def home_view():
-    return "<h1>Welcome to Adogtame!<h1>"
     
 @app.before_request
 def before_request():
