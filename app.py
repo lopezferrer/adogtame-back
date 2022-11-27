@@ -4,9 +4,10 @@ from flask_cors import CORS
 from flask_login import LoginManager
 from dotenv import load_dotenv
 import os
+from os import environ
 
 DEBUG = True
-PORT = os.environ.get("PORT")
+PORT= int(os.environ.get("PORT", 8000))
 
 import models
 from resources.dogs import dogs
@@ -21,11 +22,11 @@ app = Flask(__name__)
 
 app.secret_key = os.environ.get("APP_SECRET")
 
-app.config.update(
-    SESSION_COOKIE_SECURE=True,
-    SESSION_COOKIE_HTTPONLY=True,
-    SESSION_COOKIE_SAMESITE='None',
-)
+#app.config.update(
+#    SESSION_COOKIE_SECURE=True,
+#    SESSION_COOKIE_HTTPONLY=True,
+#    SESSION_COOKIE_SAMESITE='None',
+#)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -49,7 +50,7 @@ app.register_blueprint(veterinarians, url_prefix='/api/v1/veterinarians')
 CORS(articles, origins=['http://localhost:3000'], supports_credentials=True)
 app.register_blueprint(articles, url_prefix='/api/v1/articles')
 
-CORS(tips, origins=['http://localhost:3000'], supports_credentials=True)
+CORS(tips, origins=['http://localhost:3000',], supports_credentials=True)
 app.register_blueprint(tips, url_prefix='/api/v1/tips')
 
     
@@ -67,8 +68,10 @@ def after_request(response):
 
 if os.environ.get('FLASK_DEBUG') != 'development':
     print('\non heroku!')
+    print(PORT)
     models.initialize()
 
 if __name__ == '__main__':
     models.initialize()
-    app.run(debug=DEBUG, port=PORT)
+    app.run(host="localhost", debug=DEBUG, port=PORT)
+    

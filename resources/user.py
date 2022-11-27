@@ -39,7 +39,6 @@ def register():
 @user.route('/login', methods=["POST"])
 def login():
     payload = request.get_json()
-    print('payload:', payload)
     try:
         user = models.User.get(models.User.email == payload['email'])
         user_dict = model_to_dict(user)
@@ -68,7 +67,8 @@ def logout():
 @user.route('/admin/users', methods=["GET"])
 @login_required
 def get_all_users():
-    if current_user.admin == True:
+    print(current_user)
+    if current_user.admin == true:
         try:
             users = [model_to_dict(user) for user in models.User.select()]
             return jsonify(data=users, status={"code": 200, "message": "Success"})

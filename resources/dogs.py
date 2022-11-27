@@ -27,7 +27,7 @@ def get_my_dogs():
 @login_required
 def create_dog():
     payload = request.get_json()
-    new_dog = models.Dog.create(name=payload['name'], age=payload['age'], breed=payload['breed'], personality=payload['personality'], city=payload['city'], vaccines=payload['vaccines'], contact_number=payload['contact_number'], created_by=current_user.username)
+    new_dog = models.Dog.create(name=payload['name'], age=payload['age'], breed=payload['breed'], personality=payload['personality'], city=payload['city'], vaccines=payload['vaccines'], image1=payload['image1'], image2=payload['image2'], contact_number=payload['contact_number'], created_by=current_user.username)
     dog_dict = model_to_dict(new_dog)
     return jsonify(
         data=dog_dict,
