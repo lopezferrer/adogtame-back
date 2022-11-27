@@ -68,7 +68,7 @@ def logout():
 @login_required
 def get_all_users():
     print(current_user)
-    if current_user.admin == true:
+    if current_user.admin == True:
         try:
             users = [model_to_dict(user) for user in models.User.select()]
             return jsonify(data=users, status={"code": 200, "message": "Success"})
