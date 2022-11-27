@@ -17,7 +17,6 @@ def get_all_articles():
 
 @articles.route('/<id>', methods=["GET"])
 def get_one_article(id):
-    print(id, 'reserved word?')
     article = models.Article.get_by_id(id)
     print(article.__dict__)
     return jsonify(

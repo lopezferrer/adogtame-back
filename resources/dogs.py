@@ -26,11 +26,9 @@ def get_my_dogs():
 @dogs.route('/', methods=['POST'])
 @login_required
 def create_dog():
-    print(current_user.username)
     payload = request.get_json()
     new_dog = models.Dog.create(name=payload['name'], age=payload['age'], breed=payload['breed'], personality=payload['personality'], city=payload['city'], vaccines=payload['vaccines'], contact_number=payload['contact_number'], created_by=current_user.username)
     dog_dict = model_to_dict(new_dog)
-
     return jsonify(
         data=dog_dict,
         message='Successfully created dog!',
@@ -40,7 +38,6 @@ def create_dog():
 
 @dogs.route('/<id>', methods=["GET"])
 def get_one_dog(id):
-    print(id, 'reserved word?')
     dog = models.Dog.get_by_id(id)
     print(dog.__dict__)
     return jsonify(
@@ -69,7 +66,7 @@ def update_dog(id):
 @dogs.route('/<id>', methods=["DELETE"])
 @login_required
 def delete_dog(id):
-    if current_user.username == models.Dog.created_by:
+    if current_user.username == models.Dog.created_by or current_user.admin == True:
         query = models.Dog.delete().where(models.Dog.id==id)
         query.execute()
         return jsonify(
