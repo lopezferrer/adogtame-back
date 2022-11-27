@@ -9,6 +9,7 @@ class User(UserMixin, Model):
     username = CharField(unique=True)
     email = CharField(unique=True)
     password = CharField()
+    admin = BooleanField(default=False, null=False)
     
     class Meta:
         database = DATABASE

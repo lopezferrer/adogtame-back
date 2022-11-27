@@ -5,7 +5,6 @@ from flask_login import login_required, current_user
 
 veterinarians = Blueprint('veterinarians', 'veterinarians')
 
-
 @veterinarians.route('/', methods=["GET"])
 def get_all_veterinarians():
     try:

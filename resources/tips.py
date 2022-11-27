@@ -16,17 +16,6 @@ def get_all_tips():
         return jsonify(data={}, status={"code": 401, "message": "Error getting the resources"})
 
 
-@tips.route('/mytips', methods=["GET"])
-@login_required
-def tips_index():
-    tip_dicts = [model_to_dict(tip) for tip in current_user.my_tips]
-    return jsonify({
-        'data': tip_dicts,
-        'message': f"Successfully found {len(tip_dicts)} tips",
-        'status': 200
-    }), 200
-
-
 @tips.route('/', methods=['POST'])
 @login_required
 def create_tip():

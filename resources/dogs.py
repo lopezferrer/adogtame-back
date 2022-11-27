@@ -16,11 +16,11 @@ def get_all_dogs():
 
 
 @dogs.route('/mydogs', methods=["GET"])
+@login_required
 def get_my_dogs():
-    if current_user.email != 'lopezferrer@gmail.com':
-        return jsonify(data={}, status={"code": 403, "message": "Not authorized"});
     dogs = [model_to_dict(dog) for dog in models.Dog.select()]
-    return jsonify(data=dogs, status={"code": 200, "message": "Success"})
+    mydogs = next((dog for dog in dogs if dog['created_by'] == current_user.username), None)
+    return jsonify(data=mydogs, status={"code": 200, "message": "Success"})
 
 
 @dogs.route('/', methods=['POST'])
@@ -53,23 +53,29 @@ def get_one_dog(id):
 @dogs.route('/<id>', methods=["PUT"])
 @login_required
 def update_dog(id):
-    payload = request.get_json()
-    query = models.Dog.update(**payload).where(models.Dog.id==id)
-    query.execute()
-    return jsonify(
-        data=model_to_dict(models.Dog.get_by_id(id)),
-        status=200,
-        message= 'resource updated successfully'
-    ), 200
+    if current_user.username == models.Dog.created_by:
+        payload = request.get_json()
+        query = models.Dog.update(**payload).where(models.Dog.id==id)
+        query.execute()
+        return jsonify(
+            data=model_to_dict(models.Dog.get_by_id(id)),
+            status=200,
+            message= 'resource updated successfully'
+        ), 200
+    else:
+        return jsonify(data={}, status={"code": 403, "message": "You're not authorized"})
 
 
 @dogs.route('/<id>', methods=["DELETE"])
 @login_required
 def delete_dog(id):
-    query = models.Dog.delete().where(models.Dog.id==id)
-    query.execute()
-    return jsonify(
-        data='resource successfully deleted',
-        message= 'resource successfully deleted',
-        status=200
-    ), 200
+    if current_user.username == models.Dog.created_by:
+        query = models.Dog.delete().where(models.Dog.id==id)
+        query.execute()
+        return jsonify(
+            data='resource successfully deleted',
+            message= 'resource successfully deleted',
+            status=200
+        ), 200
+    else:
+        return jsonify(data={}, status={"code": 403, "message": "You're not authorized"})
