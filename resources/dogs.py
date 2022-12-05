@@ -66,7 +66,7 @@ def update_dog(id):
 @dogs.route('/<id>', methods=["DELETE"])
 @login_required
 def delete_dog(id):
-    if current_user.username == models.Dog.created_by or current_user.admin == True:
+    if current_user.admin == True:
         query = models.Dog.delete().where(models.Dog.id==id)
         query.execute()
         return jsonify(

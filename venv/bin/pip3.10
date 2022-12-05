@@ -1,4 +1,4 @@
-#!/Users/clopezferrer/Desktop/sei-cosmos/adogtame/adogtame-back/venv/bin/python3
+#!/Users/clopezferrer/Desktop/sei-cosmos/adogtame/adogtame-back/venv/bin/python3.10
 # -*- coding: utf-8 -*-
 import re
 import sys

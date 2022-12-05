@@ -45,7 +45,6 @@ def login():
         if(check_password_hash(user_dict['password'], payload['password'])):
             del user_dict['password'] # delete the password since the client doesn't need it
             login_user(user)
-            print(user, ' this is user')
             return jsonify(data=user_dict, status={"code": 200, "message": "Success"}) # respond to the client
         else:
             return jsonify(data={}, status={"code": 401, "message": "Username or Password is incorrect"})
@@ -93,7 +92,7 @@ def get_one_user(id):
 @user.route('/admin/users/<id>', methods=["DELETE"])
 @login_required
 def delete_user(id):
-    if current_user.admin == True:
+    if (current_user.admin == True) or (current_user.username == models.Dog.created_by):
         query = models.User.delete().where(models.User.id==id)
         query.execute()
         return jsonify(
